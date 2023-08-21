@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using PokemonApp;
 using PokemonApp.Data;
+using PokemonApp.Interfaces;
+using PokemonApp.Repository;
 using PokemonApp.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,11 +13,23 @@ EnviConfig.Config(builder.Configuration);
 
 builder.Services.AddControllers();
 
-#region dependency injection
+#region --- Auto Mapper ---
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+#endregion --- Auto Mapper ---
+
+#region --- dependency injection ---
 
 builder.Services.AddTransient<Seed>();
+builder.Services.AddScoped<IPokemonRepository, PokemonRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ICountryRepository, CountryRepository>();
+builder.Services.AddScoped<IOwnerRepository, OwnerRepository>();
+builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+builder.Services.AddScoped<IReviewerRepository, ReviewerRepository>();
 
-#endregion dependency injection
+#endregion --- dependency injection ---
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
